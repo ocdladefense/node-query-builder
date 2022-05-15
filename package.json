@@ -1,0 +1,20 @@
+{
+  "name": "@ashirk94/query-builder",
+  "version": "1.0.0",
+  "description": "Build and render SQL-like queries into UX elements.",
+  "main": "QueryBuilder.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ocdladefense/node-query-builder.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ocdladefense/node-query-builder/issues"
+  },
+  "homepage": "https://github.com/ocdladefense/node-query-builder#readme"
+}
