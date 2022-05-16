@@ -1,20 +1,26 @@
 //
 class QueryBuilder {
-  constructor() {
+  constructor(userQuery) {
     //query building
     this.SQL_EQ = "=";
     this.SQL_LIKE = "LIKE";
     this.SQL_GT = ">";
     this.SQL_LT = "<";
     this.queryChanged = new CustomEvent('queryChanged');
+    this.internalQuery = {
+      object: userQuery.object||"Contact",
+      fields: userQuery.fields||[],
+      where: userQuery.where||[],
+      limit: userQuery.limit||20,
+    };
   }
   
   /**
    *
    * @param {*} qb
    */
-  render(qb) {
-    let container = document.getElementById("custom");
+  render(locale) {
+    let container = document.getElementById(locale);
 
     let checkboxes = [];
     checkboxes = userQuery.where.map(conditionToCheckbox);
@@ -64,6 +70,21 @@ class QueryBuilder {
     // onQueryUpdate hook to execute contactQuery().
     document.addEventListener("queryChanged", onQueryUpdate, false);
     
+  }
+
+  addCondition(cond)
+  {
+    
+  }
+
+  removeCondition(cond)
+  {
+
+  }
+
+  getObject()
+  {
+    return this.internalQuery;
   }
 
   conditionToCheckbox(c) {
