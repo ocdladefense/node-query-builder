@@ -1,6 +1,6 @@
 {
   "name": "@ashirk94/query-builder",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Build and render SQL-like queries into UX elements.",
   "main": "QueryBuilder.js",
   "scripts": {

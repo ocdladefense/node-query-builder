@@ -1,14 +1,15 @@
 //
 class QueryBuilder {
-  constructor() {
+  constructor(usrQry) {
     //query building
     this.SQL_EQ = "=";
     this.SQL_LIKE = "LIKE";
     this.SQL_GT = ">";
     this.SQL_LT = "<";
-    this.queryChanged = new CustomEvent('queryChanged');
+
+    this.userQuery = usrQry;
   }
-  
+
   /**
    *
    * @param {*} qb
@@ -17,8 +18,8 @@ class QueryBuilder {
     let container = document.getElementById("custom");
 
     let checkboxes = [];
-    checkboxes = userQuery.where.map(conditionToCheckbox);
-    checkboxes.push(limitToCheckbox(userQuery.limit));
+    checkboxes = this.userQuery.where.map(this.conditionToCheckbox);
+    checkboxes.push(this.limitToCheckbox(this.userQuery.limit));
 
     // Add the created li's (from above) to the current document.
     checkboxes.forEach((checkbox) => {
@@ -47,23 +48,35 @@ class QueryBuilder {
     };
 
     if (box.checked == true) {
-      userQuery.where.push(cond);
+      this.userQuery.where.push(cond);
     } else {
-      let newWhere = userQuery.where.filter((c) => {
+      let newWhere = this.userQuery.where.filter((c) => {
         //unchecked
         if (c.field == cond.field && c.value == cond.value) {
           return false;
         }
         return true;
       });
-      userQuery.where = newWhere;
+      this.userQuery.where = newWhere;
     }
-    console.log(userQuery);
-    // contactQuery(userQuery);
+    //console.log(this.userQuery);
+    // contactQuery(this.userQuery);
     // Trigger a new customevent object and use the
-    // onQueryUpdate hook to execute contactQuery().
-    document.addEventListener("queryChanged", onQueryUpdate, false);
-    
+    // onQueryUpdate hook to execute contactQuery()
+  }
+
+  addCondition(c) {
+    this.userQuery.where.push(c);
+  }
+
+  removeCondition(c) {
+    this.userQuery.where.filter((cond) => {
+      //unchecked
+      if (c.field == cond.field && c.value == cond.value) {
+        return false;
+      }
+      return true;
+    });
   }
 
   conditionToCheckbox(c) {
