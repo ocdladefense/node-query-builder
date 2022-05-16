@@ -1,25 +1,25 @@
 //
 class QueryBuilder {
-  constructor(usrQry) {
+  constructor(qry) {
     //query building
     this.SQL_EQ = "=";
     this.SQL_LIKE = "LIKE";
     this.SQL_GT = ">";
     this.SQL_LT = "<";
 
-    this.userQuery = usrQry;
+    this.internalQuery = qry;
   }
 
   /**
    *
    * @param {*} qb
    */
-  render(qb) {
-    let container = document.getElementById("custom");
+  render(locale) {
+    let container = document.getElementById(locale);
 
     let checkboxes = [];
-    checkboxes = this.userQuery.where.map(this.conditionToCheckbox);
-    checkboxes.push(this.limitToCheckbox(this.userQuery.limit));
+    checkboxes = this.internalQuery.where.map(this.conditionToCheckbox);
+    checkboxes.push(this.limitToCheckbox(this.internalQuery.limit));
 
     // Add the created li's (from above) to the current document.
     checkboxes.forEach((checkbox) => {
@@ -48,37 +48,39 @@ class QueryBuilder {
     };
 
     if (box.checked == true) {
-      this.userQuery.where.push(cond);
+      this.internalQuery.where.push(cond);
     } else {
-      let newWhere = this.userQuery.where.filter((c) => {
+      let newWhere = this.internalQuery.where.filter((c) => {
         //unchecked
         if (c.field == cond.field && c.value == cond.value) {
           return false;
         }
         return true;
       });
-      this.userQuery.where = newWhere;
+      this.internalQuery.where = newWhere;
     }
-    //console.log(this.userQuery);
-    // contactQuery(this.userQuery);
+    //console.log(this.internalQuery);
+    // contactQuery(this.internalQuery);
     // Trigger a new customevent object and use the
     // onQueryUpdate hook to execute contactQuery()
   }
 
   addCondition(c) {
-    this.userQuery.where.push(c);
+    this.internalQuery.where.push(c);
   }
 
   removeCondition(c) {
-    this.userQuery.where.filter((cond) => {
-      //unchecked
+    this.internalQuery.where.filter((cond) => {
+      //remove equivalent fields from where
       if (c.field == cond.field && c.value == cond.value) {
         return false;
       }
       return true;
     });
   }
-
+  getObject() {
+    return this.internalQuery;
+  }
   conditionToCheckbox(c) {
     // Create li elements; each li will have a <label> and <input type="checkbox"> element as "children."
     let myLi = document.createElement("li");
