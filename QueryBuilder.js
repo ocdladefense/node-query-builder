@@ -1,19 +1,25 @@
 //
 class QueryBuilder {
-    constructor(qry) {
-      this.internalQuery = qry;
+
+
+    //mock soql query components
+    static SQL_EQ = "=";
+    static SQL_LIKE = "LIKE";
+    static SQL_GT = ">";
+    static SQL_LT = "<";
+
+
+    constructor(query) {
+      this.query = query;
     }
   
-    /**
-     *
-     * @param {*} qb
-     */
+
     render(locale) {
       let container = document.getElementById(locale);
   
       let checkboxes = [];
-      checkboxes = this.internalQuery.where.map(this.conditionToCheckbox);
-      checkboxes.push(this.limitToCheckbox(this.internalQuery.limit));
+      checkboxes = this.query.where.map(this.conditionToCheckbox);
+      checkboxes.push(this.limitToCheckbox(this.query.limit));
   
       // Add the created li's (from above) to the current document.
       checkboxes.forEach((checkbox) => {
@@ -42,37 +48,35 @@ class QueryBuilder {
       } else {
         this.removeCondition(cond);
       }
-      //console.log(this.internalQuery);
-      // contactQuery(this.internalQuery);
-      // Trigger a new customevent object and use the
-      // onQueryUpdate hook to execute contactQuery()
-      let queryChanged = new CustomEvent('querychange', {
-          detail: this.internalQuery
+
+      let evt = new CustomEvent('querychange', {
+          detail: this.query
       });
-      document.dispatchEvent(queryChanged);
+
+      document.dispatchEvent(evt);
     }
   
     addCondition(c) {
-      this.internalQuery.where.push(c);
+      this.query.where.push(c);
     }
   
     removeCondition(c) {
-      let newWhere = this.internalQuery.where.filter((cond) => {
+      let newWhere = this.query.where.filter((cond) => {
         //remove equivalent fields from where
         if (c.field == cond.field && c.value == cond.value) {
           return false;
         }
         return true;
       });
-      this.internalQuery.where = newWhere;
+      this.query.where = newWhere;
     }
     getObject() {
-      return this.internalQuery;
+      return this.query;
     }
     conditionToCheckbox(c) {
       // Create li elements; each li will have a <label> and <input type="checkbox"> element as "children."
       let myLi = document.createElement("li");
-      let myOp = c.op || this.SQL_EQ;
+      let myOp = c.op || SQL_EQ;
       let label = document.createElement("label");
       label.innerHTML = " " + c.field + "  " + myOp + " " + c.value;
       let box = document.createElement("input");
