@@ -57,10 +57,18 @@ class QueryBuilder {
     }
   
     addCondition(c) {
+        if (!c.field || !c.op || !c.value)
+        {
+            throw new Error('Invalid condition object');
+        }
       this.query.where.push(c);
     }
   
     removeCondition(c) {
+        if (!c.field || !c.op || !c.value)
+        {
+            throw new Error('Invalid condition object');
+        }
       let newWhere = this.query.where.filter((cond) => {
         //remove equivalent fields from where
         if (c.field == cond.field && c.value == cond.value) {
