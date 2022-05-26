@@ -1,5 +1,5 @@
 {
-  "name": "@ashirk94/query-builder",
+  "name": "@ocdladefense/query-builder",
   "version": "1.0.5",
   "description": "Build and render SQL-like queries into UX elements.",
   "main": "QueryBuilder.js",
