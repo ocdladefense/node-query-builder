@@ -19,7 +19,7 @@ class QueryBuilder {
   
       let checkboxes = [];
       checkboxes = this.query.where.map(this.conditionToCheckbox);
-      checkboxes.push(this.limitToCheckbox(this.query.limit));
+      //checkboxes.push(this.limitToCheckbox(this.query.limit));
   
       // Add the created li's (from above) to the current document.
       checkboxes.forEach((checkbox) => {
