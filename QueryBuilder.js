@@ -16,7 +16,9 @@ class QueryBuilder {
 
     render(locale) {
       let container = document.getElementById(locale);
-  
+      while (container.firstChild) {
+        container.removeChild(container.firstChild);
+      }
       let checkboxes = [];
       checkboxes = this.query.where.map(this.conditionToCheckbox);
       //checkboxes.push(this.limitToCheckbox(this.query.limit));
@@ -85,8 +87,17 @@ class QueryBuilder {
       // Create li elements; each li will have a <label> and <input type="checkbox"> element as "children."
       let myLi = document.createElement("li");
       let myOp = c.op || SQL_EQ;
+      let myField = c.field;
+      if (c.op == 'LIKE')
+      {
+          myOp = '=';
+      }
+      if (c.field == 'Ocdla_Current_Member_Flag__c')
+      {
+          myField = 'Current Member';
+      }
       let label = document.createElement("label");
-      label.innerHTML = " " + c.field + "  " + myOp + " " + c.value;
+      label.innerHTML = " " + myField + "  " + myOp + " " + c.value;
       let box = document.createElement("input");
       box.setAttribute("type", "checkbox");
       box.setAttribute("class", "query-filter");
