@@ -92,10 +92,11 @@ class QueryBuilder {
       {
           myOp = '=';
       }
-      if (c.field == 'Ocdla_Current_Member_Flag__c')
-      {
-          myField = 'Current Member';
-      }
+      myField = myField.replace('Ocdla_', '');
+      myField = myField.replace('__c', '');
+      myField = myField.replaceAll('_', ' ');
+      
+
       let label = document.createElement("label");
       label.innerHTML = " " + myField + "  " + myOp + " " + c.value;
       let box = document.createElement("input");
