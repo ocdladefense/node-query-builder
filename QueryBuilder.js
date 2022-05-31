@@ -16,10 +16,12 @@ class QueryBuilder {
 
     render(locale) {
       let container = document.getElementById(locale);
-  
+      while (container.firstChild) {
+        container.removeChild(container.firstChild);
+      }
       let checkboxes = [];
       checkboxes = this.query.where.map(this.conditionToCheckbox);
-      checkboxes.push(this.limitToCheckbox(this.query.limit));
+      //checkboxes.push(this.limitToCheckbox(this.query.limit));
   
       // Add the created li's (from above) to the current document.
       checkboxes.forEach((checkbox) => {
@@ -85,8 +87,18 @@ class QueryBuilder {
       // Create li elements; each li will have a <label> and <input type="checkbox"> element as "children."
       let myLi = document.createElement("li");
       let myOp = c.op || SQL_EQ;
+      let myField = c.field;
+      if (c.op == 'LIKE')
+      {
+          myOp = '=';
+      }
+      myField = myField.replace('Ocdla_', '');
+      myField = myField.replace('__c', '');
+      myField = myField.replaceAll('_', ' ');
+      
+
       let label = document.createElement("label");
-      label.innerHTML = " " + c.field + "  " + myOp + " " + c.value;
+      label.innerHTML = " " + myField + "  " + myOp + " " + c.value;
       let box = document.createElement("input");
       box.setAttribute("type", "checkbox");
       box.setAttribute("class", "query-filter");
