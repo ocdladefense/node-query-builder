@@ -33,7 +33,10 @@ class QueryBuilder {
     getBox(e) {
       let box = e.target;
       if (!box.classList.contains("query-filter")) return;
-      console.log(box);
+      
+      if(box.readonly == "true" || box.readonly === true) {
+        return;
+      }
   
       let field = box.dataset.field;
       let value = box.dataset.value;
@@ -44,7 +47,9 @@ class QueryBuilder {
         value: value,
         op: op
       };
+      
       console.log(box.checked);
+
       if (box.checked == true) {
         this.addCondition(cond);
       } else {
@@ -58,16 +63,24 @@ class QueryBuilder {
       document.dispatchEvent(evt);
     }
   
+
+    
+
     addCondition(c) {
-        if (!c.field || !c.op || !c.value)
+        if (!c.field || !c.op)
         {
             throw new Error('Invalid condition object');
         }
       this.query.where.push(c);
     }
+
+    updateCondition(c) {
+      this.removeCondition(c);
+      this.addCondition(c);
+    }
   
     removeCondition(c) {
-        if (!c.field || !c.op || !c.value)
+        if (!c.field || !c.op)
         {
             throw new Error('Invalid condition object');
         }
@@ -80,14 +93,21 @@ class QueryBuilder {
       });
       this.query.where = newWhere;
     }
+
+
     getObject() {
       return this.query;
     }
+
+
     conditionToCheckbox(c) {
       // Create li elements; each li will have a <label> and <input type="checkbox"> element as "children."
+      console.log(c);
       let myLi = document.createElement("li");
       let myOp = c.op || SQL_EQ;
       let myField = c.field;
+      let editable = c.editable === false ? false : true;
+
       if (c.op == 'LIKE')
       {
           myOp = '=';
@@ -100,13 +120,20 @@ class QueryBuilder {
       let label = document.createElement("label");
       label.innerHTML = " " + myField + "  " + myOp + " " + c.value;
       let box = document.createElement("input");
+      let classes = ["query-filter"];
+      if(!editable) {
+        classes.push("query-filter-readonly");
+      }
       box.setAttribute("type", "checkbox");
-      box.setAttribute("class", "query-filter");
+      box.setAttribute("class", classes.join(" "));
       box.setAttribute("data-field", c.field);
       box.setAttribute("data-value", c.value);
       box.setAttribute("data-op", myOp);
       box.setAttribute("data-feature-name", "search");
       box.setAttribute("checked", "checked");
+      if(!editable) {
+        box.onclick = function(e) { e.stopPropagation(); e.preventDefault; return false; };
+      } 
   
       myLi.appendChild(box);
       myLi.appendChild(label);
