@@ -4,6 +4,8 @@ Build and render SQL-like queries into UX elements.
 ## Version History
 ### v1.1.1
 * Updated <code>addCondition</code> method - Simplify call to <code>addCondition</code> to use only <code>field</code> and <code>value</code> parameters; and an optional <code>op</code> parameter that defaults to <code>=</code>.
+### v1.1.0
+* Original version.
 
 
 ## Custom Events
