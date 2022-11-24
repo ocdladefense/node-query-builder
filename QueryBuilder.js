@@ -66,19 +66,52 @@ class QueryBuilder {
 
     
 
-    addCondition(c) {
-        if (!c.field || !c.op)
-        {
-            throw new Error('Invalid condition object');
+    addCondition(field, value = null, op = null) {
+
+        if(!value) {
+          this.addConditionObject(field);
+          return;
         }
+
+        else if(!op) {
+          let cond = {
+            field: field,
+            op: QueryBuilder.SQL_EQ,
+            value: value,
+            editable: false
+          };
+
+          this.addConditionObject(cond);
+        }
+
+        else {
+          let cond = {
+            field: field,
+            op: op,
+            value: value,
+            editable: false
+          };
+
+          this.addConditionObject(cond);
+        }
+
+    }
+
+    addConditionObject(c) {
+      if (!c.field || !c.op)
+      {
+          throw new Error('Invalid condition object');
+      }
       this.query.where.push(c);
     }
+
 
     updateCondition(c) {
       this.removeCondition(c);
       this.addCondition(c);
     }
   
+
     removeCondition(c) {
         if (!c.field || !c.op)
         {
