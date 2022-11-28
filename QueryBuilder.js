@@ -172,6 +172,14 @@ class QueryBuilder {
       myLi.appendChild(label);
       return myLi;
     }
+
+    setOption(name, value) {
+      this.query[name] = value;
+    }
+
+    getOption(name) {
+      return this.query[name];
+    }
   
     limitToCheckbox(limit) {
       // Create li elements; each li will have a <label> and <input type="checkbox"> element as "children."
