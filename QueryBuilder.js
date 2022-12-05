@@ -64,37 +64,42 @@ class QueryBuilder {
     }
   
 
-    
+    buildCondition(field, value = null, op = null) {
+
+      // If so, assume it's already a fully formed object.
+      if(typeof field === 'object') {
+        return field;
+      }
+
+      else if(!op) {
+        let cond = {
+          field: field,
+          op: QueryBuilder.SQL_EQ,
+          value: value,
+          editable: false
+        };
+
+        return cond;
+      }
+
+      else {
+        let cond = {
+          field: field,
+          op: op,
+          value: value,
+          editable: false
+        };
+
+        return cond;
+      }
+
+    }
 
     addCondition(field, value = null, op = null) {
 
-        if(!value) {
-          this.addConditionObject(field);
-          return;
-        }
-
-        else if(!op) {
-          let cond = {
-            field: field,
-            op: QueryBuilder.SQL_EQ,
-            value: value,
-            editable: false
-          };
-
-          this.addConditionObject(cond);
-        }
-
-        else {
-          let cond = {
-            field: field,
-            op: op,
-            value: value,
-            editable: false
-          };
-
-          this.addConditionObject(cond);
-        }
-
+        let cond = this.buildCondition(field,value,op);
+        
+        return this.addConditionObject(cond);
     }
 
     addConditionObject(c) {
@@ -106,23 +111,26 @@ class QueryBuilder {
     }
 
 
-    updateCondition(c) {
-      this.removeCondition(c);
-      this.addCondition(c);
+    updateCondition(field, value = null, op = null) {
+
+      let cond = this.buildCondition(field,value,op);
+
+      this.removeCondition(cond);
+      this.addCondition(cond);
     }
   
 
-    removeCondition(c) {
-        if (!c.field || !c.op)
-        {
-            throw new Error('Invalid condition object');
-        }
-      let newWhere = this.query.where.filter((cond) => {
-        //remove equivalent fields from where
-        if (c.field == cond.field && c.value == cond.value) {
-          return false;
-        }
-        return true;
+    removeCondition(field, value = null, op = null) {
+
+      let cond = this.buildCondition(field,value,op);
+
+      if (!cond.field || !cond.op)
+      {
+          throw new Error('Invalid condition object');
+      }
+      let newWhere = this.query.where.filter((c) => {
+          //remove equivalent fields from where
+          return c.field != cond.field;
       });
       this.query.where = newWhere;
     }
@@ -175,6 +183,10 @@ class QueryBuilder {
 
     setOption(name, value) {
       this.query[name] = value;
+    }
+
+    removeOption(name) {
+      delete this.query[name];
     }
 
     getOption(name) {
